@@ -14,7 +14,7 @@ class LinkCollector(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         for name, value in attrs:
-            if name in ("href", "src") and value:
+            if name in ("href", "src", "data-model-url") and value:
                 self.links.append(value)
 
 

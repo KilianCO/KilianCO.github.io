@@ -114,8 +114,8 @@ async function humanPlay(col) {
 }
 
 function pickAgent() {
-  if (model) return model;
-  const [depth, rnd] = LEVELS[levelEl.value];
+  if (levelEl.value === "model" && model) return model;
+  const [depth, rnd] = LEVELS[levelEl.value] ?? LEVELS[4];
   return new MinimaxAgent(depth, rnd);
 }
 
@@ -136,14 +136,18 @@ firstEl.addEventListener("change", newGame);
 
 // ---------- Chargement du modèle, s'il est configuré ----------
 const modelUrl = root.dataset.modelUrl;
+// Le modèle entraîné s'ajoute aux adversaires minimax, il ne les remplace pas.
 if (modelUrl) {
-  levelEl.closest("label").hidden = true;
   agentEl.textContent = "Chargement du modèle…";
   new OnnxAgent(modelUrl, root.dataset.modelVersion).load()
-    .then((m) => { model = m; newGame(); })
+    .then((m) => {
+      model = m;
+      levelEl.prepend(new Option("IA entraînée (DQN)", "model"));
+      levelEl.value = "model";
+      newGame();
+    })
     .catch((err) => {
       console.error(err);
-      levelEl.closest("label").hidden = false;
       newGame();
       agentEl.textContent = "Le modèle n'a pas pu être chargé : vous jouez contre l'adversaire de référence (minimax).";
     });

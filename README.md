@@ -21,6 +21,20 @@ tests/test_site.py          build + vérification des liens internes
 build.py                    le générateur
 ```
 
+## Choix techniques
+
+| Choix | Raison |
+|---|---|
+| Site statique, générateur Python maison | Quelques pages seulement : pas de framework à maintenir, un code lisible en dix minutes, des pages qui se chargent vite. |
+| Contenu en YAML et Markdown | Ajouter un projet revient à ajouter un fichier ; la mise en page reste séparée du texte. |
+| GitHub Pages + GitHub Actions | Hébergement gratuit, HTTPS inclus. Chaque push lance les tests puis publie ; un test en échec bloque la mise en ligne. |
+| Modèle du Puissance 4 exécuté dans le navigateur | Le réseau (environ 1 Mo, format ONNX) tourne chez le visiteur avec ONNX Runtime Web : aucun serveur, aucun coût, aucune latence réseau. |
+| Modèle du GAN servi par une API externe | Trop lourd pour un navigateur : la page appelle un Space Hugging Face. |
+| Un dépôt par projet | Le site ne contient aucun code d'entraînement. Chaque projet exporte un artefact (fichier de modèle ou API) que sa page référence. |
+| Repli automatique | Si le modèle ne se charge pas, la démo Puissance 4 retombe sur un adversaire minimax. |
+
+Les tests construisent le site et vérifient que les pages existent, qu'aucun lien interne n'est cassé et que le fichier du modèle référencé est présent.
+
 ## Travailler en local
 
 ```bash

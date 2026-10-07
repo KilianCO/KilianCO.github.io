@@ -3,3 +3,8 @@ __pycache__/
 .pytest_cache/
 .venv/
 *.onnx
+# Exception : les modèles servis par le site, exportés depuis les dépôts des projets.
+!static/models/*.onnx
+
+# Documentation personnelle, non publiée
+notes/
