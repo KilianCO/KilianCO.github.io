@@ -74,27 +74,25 @@ code: "https://github.com/KilianCO/mon-projet"   # optionnel : sans ce champ, au
 
 La page `/projets/mon-projet/` et la carte sur l'accueil sont générées automatiquement.
 
-## Brancher le modèle Puissance 4
+## Mettre à jour le modèle Puissance 4
 
-La démo tourne aujourd'hui contre un minimax alpha-bêta (aussi utile comme baseline d'évaluation). Pour passer au modèle entraîné :
+La démo propose l'IA entraînée et trois adversaires minimax. Le modèle vient du dépôt [puissance-4](https://github.com/KilianCO/puissance-4), où il est entraîné, évalué puis exporté.
 
-1. **Exporter en ONNX** en respectant ce contrat :
-   - entrée `float32 [1, 2, 6, 7]` : plan 0 = pions du joueur qui doit jouer, plan 1 = pions adverses, ligne 0 en haut ;
-   - sortie `float32 [1, 7]` : un score (logit) par colonne.
-
-   Avec PyTorch : `torch.onnx.export(reseau, entree_exemple, "puissance4.onnx")`
-   (si ton encodage est différent, adapte `OnnxAgent.choose` dans `static/js/puissance4/agents.js`).
-2. **Publier** le fichier : soit dans `static/models/puissance4.onnx` (simple), soit comme artefact d'une GitHub Release récupéré au build (étape déjà préparée, commentée, dans `.github/workflows/deploy.yml`).
-3. **Configurer** dans `content/projets/puissance-4.md` :
+1. **Exporter** depuis le dépôt du projet : `python -m P4.rl.export_onnx models/dqn_v2/best.pt models/puissance4.onnx`. Le contrat est vérifié à l'export :
+   - entrée `float32 [N, 2, 6, 7]` : plan 0 = pions du joueur qui doit jouer, plan 1 = pions adverses, ligne 0 en haut ;
+   - sortie `float32 [N, 7]` : une valeur par colonne.
+2. **Copier** le fichier dans `static/models/puissance4.onnx`.
+3. **Déclarer** la version dans `content/projets/puissance-4.md` :
    ```yaml
    demo:
      type: connect4
      model_url: "/models/puissance4.onnx"
-     model_version: "v1"
+     model_version: "v2"
    ```
 
-Si le modèle ne se charge pas, la page retombe automatiquement sur le minimax. Pour aller plus loin côté MLOps : ajouter dans la CI un script qui fait jouer le modèle contre le minimax et bloque le déploiement sous un taux de victoire minimal.
+Si le modèle ne se charge pas, la page retombe automatiquement sur le minimax. Les tests vérifient que le fichier référencé existe.
 
+Pour des modèles plus lourds, une étape commentée dans `.github/workflows/deploy.yml` télécharge le fichier depuis une GitHub Release au lieu de le versionner ici.
 ## Brancher le GAN audio → vidéo
 
 1. Crée un Space sur huggingface.co (SDK **Gradio**, matériel CPU gratuit).
