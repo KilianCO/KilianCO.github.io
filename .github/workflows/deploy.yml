@@ -1,0 +1,64 @@
+# Construit, teste et publie le site sur GitHub Pages à chaque push sur main.
+# Activer une fois : Settings > Pages > Source : "GitHub Actions".
+name: Déploiement du site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      - name: Tester (construction + liens internes)
+        run: pytest -q
+
+      # --- Étape prévue pour le modèle Puissance 4 -------------------------
+      # Quand le modèle sera publié comme artefact d'une GitHub Release,
+      # décommente ces lignes : le fichier ONNX est récupéré au moment du build
+      # et servi par le site (model_url: "/models/puissance4.onnx").
+      #
+      # - name: Récupérer le modèle Puissance 4
+      #   env:
+      #     GH_TOKEN: ${{ github.token }}
+      #   run: |
+      #     mkdir -p static/models
+      #     gh release download model-v1 --repo KilianCO/puissance-4 \
+      #       --pattern "puissance4.onnx" --dir static/models
+
+      - name: Construire le site
+        run: python build.py
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,53 @@
+{% macro board(id='', static_pattern=true) %}
+{# Plateau 7 × 6. Le motif statique sert de rendu sans JavaScript ; main.js le rejoue en animation. #}
+{% set pattern = [
+  '.......',
+  '.......',
+  '...y...',
+  '..yr...',
+  '.yrr...',
+  'yrry...'
+] %}
+<div class="mini-board" {% if id %}id="{{ id }}"{% endif %} role="img" aria-label="Plateau de Puissance 4 où les jaunes alignent quatre pions en diagonale">
+  {% for row in pattern %}{% for c in row %}
+  <span class="cell"><span class="disc {% if static_pattern and c == 'y' %}is-y{% elif static_pattern and c == 'r' %}is-r{% endif %}"></span></span>
+  {% endfor %}{% endfor %}
+</div>
+{% endmacro %}
+
+{% macro wave_to_frames() %}
+<svg class="wave-frames" viewBox="0 0 320 200" role="img" aria-label="Une onde sonore transformée en suite d'images">
+  <g class="wave" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+    {% for i in range(18) %}
+    {% set h = [12, 30, 52, 24, 70, 40, 18, 60, 84, 46, 28, 66, 36, 20, 50, 74, 32, 14][i] %}
+    <line x1="{{ 14 + i * 7 }}" y1="{{ 100 - h / 2 }}" x2="{{ 14 + i * 7 }}" y2="{{ 100 + h / 2 }}"/>
+    {% endfor %}
+  </g>
+  <path class="arrow" d="M150 100h26m-8-8 8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  {% for i in range(3) %}
+  <g transform="translate({{ 190 + i * 14 }} {{ 52 + i * 14 }})">
+    <rect width="96" height="72" rx="6" class="frame frame-{{ i }}"/>
+    <circle cx="{{ 30 + i * 14 }}" cy="34" r="{{ 14 + i * 3 }}" class="blob"/>
+  </g>
+  {% endfor %}
+</svg>
+{% endmacro %}
+
+{% macro dice() %}
+{# Trois dés : chaque face est une liste de positions de points sur une grille 3 × 3. #}
+{% set faces = [
+  [[0, 0], [2, 2], [1, 1]],
+  [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]],
+  [[0, 0], [2, 0], [0, 2], [2, 2]]
+] %}
+<svg class="dice" viewBox="0 0 320 200" role="img" aria-label="Trois dés de Perudo">
+  {% for face in faces %}
+  <g transform="translate({{ 22 + loop.index0 * 98 }} {{ [70, 34, 86][loop.index0] }}) rotate({{ [-8, 6, -4][loop.index0] }} 40 40)">
+    <rect width="80" height="80" rx="14" class="die {{ 'is-y' if loop.index0 == 1 else '' }}"/>
+    {% for x, y in face %}
+    <circle class="pip" cx="{{ 20 + x * 20 }}" cy="{{ 20 + y * 20 }}" r="7"/>
+    {% endfor %}
+  </g>
+  {% endfor %}
+</svg>
+{% endmacro %}

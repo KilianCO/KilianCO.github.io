@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% from "_visuals.html" import board, wave_to_frames, dice %}
+{% block content %}
+<section class="hero wrap">
+  <div class="hero-text">
+    <p class="hero-role">{{ site.role }} à {{ site.location }}</p>
+    <h1 class="hero-name">Kilian<br>Collet</h1>
+    <p class="hero-tagline">{{ site.tagline }}</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="#projets">Voir les projets</a>
+      <a class="btn" href="{{ url(site.links.cv) }}" download>Télécharger le CV</a>
+    </div>
+  </div>
+  <figure class="hero-visual">
+    {{ board(id='hero-board') }}
+    <figcaption>
+      Mon IA de Puissance 4 vous attend.
+      <a href="{{ url('/projets/puissance-4/') }}">Lancer une partie</a>
+    </figcaption>
+  </figure>
+</section>
+
+<section id="projets" class="section wrap" aria-labelledby="titre-projets">
+  <h2 id="titre-projets" class="section-title">Projets</h2>
+  <p class="section-intro">Des modèles entraînés sur mon temps libre, déployés pour être testés ici même plutôt que décrits.</p>
+  <div class="projects">
+    {% for p in projects %}
+    <article class="project {{ loop.cycle('', 'is-flipped') }}">
+      <a class="project-visual" href="{{ url('/projets/' ~ p.slug ~ '/') }}" tabindex="-1" aria-hidden="true">
+        {% if p.demo.type == 'connect4' %}{{ board() }}{% elif p.demo.type == 'audio2video' %}{{ wave_to_frames() }}{% else %}{{ dice() }}{% endif %}
+      </a>
+      <div class="project-body">
+        <p class="status {{ 'is-live' if p.status == 'Démo jouable' else '' }}">{{ p.status }}</p>
+        <h3><a href="{{ url('/projets/' ~ p.slug ~ '/') }}">{{ p.title }}</a></h3>
+        <p>{{ p.summary }}</p>
+        <ul class="tags" aria-label="Technologies">
+          {% for t in p.stack %}<li>{{ t }}</li>{% endfor %}
+        </ul>
+        <div class="actions">
+          <a class="btn btn-primary" href="{{ url('/projets/' ~ p.slug ~ '/') }}">{{ 'Jouer contre l\'IA' if p.demo.type == 'connect4' else 'Découvrir le projet' }}</a>
+          {% if p.code %}<a class="btn" href="{{ p.code }}">Voir le code</a>{% endif %}
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  <p class="more">Mes autres projets sont sur <a href="{{ site.links.github }}">mon GitHub</a>.</p>
+</section>
+
+<section id="parcours" class="section wrap" aria-labelledby="titre-parcours">
+  <h2 id="titre-parcours" class="section-title">Parcours</h2>
+  <div class="about">
+    <img class="portrait" src="{{ url('/img/kilian.webp') }}" alt="Portrait de Kilian Collet" width="317" height="317" loading="lazy">
+    <div class="about-text">
+      {% for para in site.about %}<p>{{ para }}</p>{% endfor %}
+    </div>
+  </div>
+  <ol class="timeline">
+    {% for step in site.timeline %}
+    <li class="{{ 'is-next' if loop.last else '' }}">
+      <span class="tl-year">{{ step.year }}</span>
+      <h3>{{ step.title }}</h3>
+      <p>{{ step.text }}</p>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<section class="section wrap" aria-labelledby="titre-experience">
+  <h2 id="titre-experience" class="section-title">Expérience</h2>
+  <div class="jobs">
+    {% for job in site.experience %}
+    <article class="job">
+      <header>
+        <h3>{{ job.company }}</h3>
+        <p class="job-role">{{ job.role }}</p>
+        <p class="job-period">{{ job.period }}</p>
+      </header>
+      <ul>
+        {% for pt in job.points %}<li>{{ pt }}</li>{% endfor %}
+      </ul>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section wrap" aria-labelledby="titre-stack">
+  <h2 id="titre-stack" class="section-title">Stack</h2>
+  <dl class="stack">
+    {% for g in site.stack %}
+    <div>
+      <dt>{{ g.group }}</dt>
+      <dd>{{ g['items'] | join(', ') }}</dd>
+    </div>
+    {% endfor %}
+    <div>
+      <dt>Langues</dt>
+      <dd>{{ site.languages | join(', ') }}</dd>
+    </div>
+  </dl>
+</section>
+
+<section id="contact" class="section contact" aria-labelledby="titre-contact">
+  <div class="wrap">
+    <h2 id="titre-contact" class="contact-title">Parlons data, architecture cloud ou projets analytiques.</h2>
+    <div class="actions">
+      <a class="btn btn-primary" href="mailto:{{ site.links.email }}">Écrire à {{ site.links.email }}</a>
+      <a class="btn" href="{{ site.links.linkedin }}">LinkedIn</a>
+      <a class="btn" href="{{ site.links.github }}">GitHub</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

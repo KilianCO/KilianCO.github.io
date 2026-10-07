@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="{{ site.lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ site.name }}, {{ site.role }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ site.description }}{% endblock %}">
+  <link rel="canonical" href="{{ site.url.rstrip('/') }}{{ url(page_path) }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ self.title() }}">
+  <meta property="og:description" content="{{ self.description() }}">
+  <meta property="og:image" content="{{ site.url.rstrip('/') }}{{ url('/img/kilian.jpg') }}">
+  <meta name="theme-color" content="#1E2A44">
+  <link rel="icon" href="{{ url('/favicon.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url('/css/style.css') }}">
+  <script>
+    try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="{{ url('/') }}">
+        <span class="brand-disc" aria-hidden="true"></span>{{ site.name }}
+      </a>
+      <nav aria-label="Navigation principale">
+        <ul class="nav">
+          <li><a href="{{ url('/#projets') }}">Projets</a></li>
+          <li><a href="{{ url('/#parcours') }}">Parcours</a></li>
+          <li><a href="{{ url('/#contact') }}">Contact</a></li>
+          <li><a class="nav-cv" href="{{ url(site.links.cv) }}">CV</a></li>
+        </ul>
+      </nav>
+      <button class="theme-toggle" type="button" aria-label="Changer de thème" title="Changer de thème">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="contenu">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>{{ site.name }}, {{ site.location }}. Site généré en Python et déployé par GitHub Actions.</p>
+      <ul class="footer-links">
+        <li><a href="mailto:{{ site.links.email }}">E-mail</a></li>
+        <li><a href="{{ site.links.linkedin }}" rel="me">LinkedIn</a></li>
+        <li><a href="{{ site.links.github }}" rel="me">GitHub</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script src="{{ url('/js/main.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,74 @@
+# Toutes les informations du site sont ici. Modifie ce fichier, pousse sur
+# GitHub : le site est reconstruit et redéployé automatiquement.
+
+url: "https://kilianco.github.io"   # adresse publique du site
+base_path: ""                       # "" si le dépôt s'appelle KilianCO.github.io, "/nom-du-depot" sinon
+lang: fr
+
+name: "Kilian Collet"
+role: "Data engineer & data analyst"
+location: "Lyon"
+tagline: "Je conçois des solutions data de bout en bout : de l'ingestion et l'architecture des données jusqu'aux tableaux de bord qui aident les équipes à décider."
+description: "Portfolio de Kilian Collet, data engineer et data analyst à Lyon : pipelines Azure, machine learning, MLOps et démos interactives."
+
+links:
+  email: "kilian.c@gmx.fr"
+  linkedin: "https://www.linkedin.com/in/kcollet/"
+  github: "https://github.com/KilianCO/"
+  cv: "/cv/cv-kilian-collet.pdf"
+
+about:
+  - "Mon parcours n'est pas linéaire, et c'est une force. En 2020, j'ai choisi de reprendre mes études pour me consacrer à la data."
+  - "Cette double culture mathématiques et économie me permet d'allier rigueur statistique et compréhension des enjeux métier. Aujourd'hui, je fais évoluer ma pratique vers le MLOps : entraîner un modèle ne suffit pas, il faut le livrer, le versionner et le faire tourner."
+
+timeline:
+  - year: "2020"
+    title: "Reprise d'études"
+    text: "Je quitte ma trajectoire précédente pour me consacrer à la data."
+  - year: "2021"
+    title: "Licence Mathématiques & Économie"
+    text: "Université Claude-Bernard Lyon 1."
+  - year: "2023"
+    title: "Master Mathématiques Appliquées, parcours Data Science"
+    text: "Université Claude-Bernard Lyon 1, puis stage de data scientist chez Boralex."
+  - year: "2024"
+    title: "Data analyst architect chez Proteor"
+    text: "Pipelines Azure, modélisation SQL, dashboards et industrialisation."
+  - year: "Ensuite"
+    title: "MLOps"
+    text: "Déployer et opérer des modèles en production. Les démos de ce site en sont le terrain d'essai."
+
+experience:
+  - company: "Proteor"
+    role: "Data analyst architect"
+    period: "Depuis mai 2024"
+    points:
+      - "Conception et architecture de pipelines de données sur Azure Synapse Analytics et Azure Fabric"
+      - "Automatisation des traitements avec Azure Functions et Python (ETL, intégrations API)"
+      - "Modélisation relationnelle et procédures SQL"
+      - "Construction de features et analyses avancées à partir des données métier"
+      - "KPIs et dashboards Power BI et QlikSense pour le pilotage de la performance"
+      - "Industrialisation via Azure DevOps"
+  - company: "Boralex"
+    role: "Data scientist (stage)"
+    period: "Avril à octobre 2023"
+    points:
+      - "Automatisation de requêtes API pour alimenter une application Python (Dash) mise à jour en continu"
+      - "Orchestration des flux avec Prefect, conteneurisation Docker, déploiement avec Ansible"
+      - "CI/CD avec GitHub Actions, en méthodologie agile"
+
+stack:
+  - group: "Cloud & data engineering"
+    items: ["Azure Synapse Analytics", "Azure Fabric", "Azure Functions", "Azure DevOps", "Prefect"]
+  - group: "Langages"
+    items: ["Python (Pandas, NumPy, SciPy)", "SQL", "R", "PowerQuery"]
+  - group: "BI & visualisation"
+    items: ["Power BI", "QlikSense", "Tableau", "Dash", "Streamlit"]
+  - group: "Machine learning"
+    items: ["Scikit-learn", "TensorFlow / Keras", "GAN", "Apprentissage par renforcement"]
+  - group: "DevOps"
+    items: ["Docker", "Ansible", "GitHub Actions"]
+  - group: "Bases de données"
+    items: ["SQL Server", "MySQL"]
+
+languages: ["Français", "Anglais", "Italien", "Espagnol"]

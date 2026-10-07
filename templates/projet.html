@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }}, par {{ site.name }}{% endblock %}
+{% block description %}{{ project.summary }}{% endblock %}
+{% block content %}
+<article class="wrap project-page">
+  <nav class="crumbs" aria-label="Fil d'Ariane">
+    <a href="{{ url('/#projets') }}">Tous les projets</a>
+  </nav>
+  <header class="project-head">
+    <p class="status {{ 'is-live' if project.status == 'Démo jouable' else '' }}">{{ project.status }}</p>
+    <h1>{{ project.title }}</h1>
+    <p class="lede">{{ project.summary }}</p>
+    <ul class="tags" aria-label="Technologies">
+      {% for t in project.stack %}<li>{{ t }}</li>{% endfor %}
+    </ul>
+    {% if project.code %}
+    <div class="actions">
+      <a class="btn" href="{{ project.code }}">Voir le code sur GitHub</a>
+    </div>
+    {% endif %}
+  </header>
+
+  {% if project.demo.type == 'connect4' %}
+  <section class="demo c4" aria-labelledby="titre-demo"
+           data-model-url="{{ url(project.demo.model_url) if project.demo.model_url and project.demo.model_url.startswith('/') else project.demo.model_url }}"
+           data-model-version="{{ project.demo.model_version }}">
+    <h2 id="titre-demo" class="visually-hidden">Jouer une partie</h2>
+    <div class="c4-controls">
+      <label>Niveau
+        <select id="c4-level">
+          <option value="1">Facile</option>
+          <option value="4" selected>Moyen</option>
+          <option value="6">Difficile</option>
+        </select>
+      </label>
+      <label>Premier joueur
+        <select id="c4-first">
+          <option value="human" selected>Vous</option>
+          <option value="ai">L'IA</option>
+        </select>
+      </label>
+      <button class="btn" id="c4-new" type="button">Nouvelle partie</button>
+    </div>
+    <div class="c4-stage">
+      <div class="c4-board" id="c4-board" role="grid" aria-label="Plateau de jeu, 7 colonnes et 6 lignes"></div>
+      <div class="c4-scores" id="c4-scores" aria-hidden="true"></div>
+    </div>
+    <p class="c4-status" id="c4-status" aria-live="polite">Vous jouez les jaunes. Choisissez une colonne.</p>
+    <p class="c4-agent" id="c4-agent"></p>
+    <p class="c4-help">Cliquez sur une colonne, ou utilisez les flèches gauche et droite puis Entrée.</p>
+  </section>
+  {% elif project.demo.type == 'audio2video' %}
+  <section class="demo a2v" aria-labelledby="titre-demo"
+           data-space="{{ project.demo.space }}"
+           data-endpoint="{{ project.demo.endpoint }}"
+           data-max-seconds="{{ project.demo.max_seconds }}">
+    <h2 id="titre-demo">Générer une vidéo depuis un son</h2>
+    <label class="drop" id="a2v-drop">
+      <input type="file" id="a2v-file" accept="audio/*" class="visually-hidden">
+      <span class="drop-title">Déposez un fichier audio ou cliquez pour le choisir</span>
+      <span class="drop-hint">WAV, MP3 ou OGG, {{ project.demo.max_seconds }} secondes maximum.</span>
+    </label>
+    <audio id="a2v-audio" controls hidden></audio>
+    <div class="actions">
+      <button class="btn btn-primary" id="a2v-run" type="button" disabled>Générer la vidéo</button>
+    </div>
+    <p class="a2v-status" id="a2v-status" aria-live="polite"></p>
+    <video id="a2v-video" controls playsinline hidden></video>
+  </section>
+  {% endif %}
+
+  <div class="prose">
+    {{ project.body | safe }}
+  </div>
+
+  <nav class="next-project" aria-label="Autres projets">
+    {% for p in projects if p.slug != project.slug %}
+    <a href="{{ url('/projets/' ~ p.slug ~ '/') }}">Projet suivant : {{ p.title }}</a>
+    {% endfor %}
+  </nav>
+</article>
+{% endblock %}
+{% block scripts %}
+{% if project.demo.type == 'connect4' %}
+<script type="module" src="{{ url('/js/puissance4/ui.js') }}"></script>
+{% elif project.demo.type == 'audio2video' %}
+<script type="module" src="{{ url('/js/gan-demo.js') }}"></script>
+{% endif %}
+{% endblock %}

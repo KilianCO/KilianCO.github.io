@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Page introuvable, {{ site.name }}{% endblock %}
+{% block content %}
+<section class="wrap notfound">
+  <h1>Cette page n'existe pas.</h1>
+  <p>Le lien est peut-être ancien, ou l'adresse contient une faute de frappe.</p>
+  <div class="actions">
+    <a class="btn btn-primary" href="{{ url('/') }}">Revenir à l'accueil</a>
+    <a class="btn" href="{{ url('/#projets') }}">Voir les projets</a>
+  </div>
+</section>
+{% endblock %}
