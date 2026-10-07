@@ -6,10 +6,10 @@ base_path: ""                       # "" si le dépôt s'appelle KilianCO.github
 lang: fr
 
 name: "Kilian Collet"
-role: "Data engineer & data analyst"
+role: "Data analyst architect"
 location: "Lyon"
-tagline: "Je conçois des solutions data de bout en bout : de l'ingestion et l'architecture des données jusqu'aux tableaux de bord qui aident les équipes à décider."
-description: "Portfolio de Kilian Collet, data engineer et data analyst à Lyon : pipelines Azure, machine learning, MLOps et démos interactives."
+tagline: "Je conçois des solutions data de bout en bout : ingestion, architecture de données et pipelines, automatisation, intégration continue et déploiement, jusqu'aux rapports BI et à leur maintenance."
+description: "Portfolio de Kilian Collet, data analyst architect à Lyon : architecture de données, pipelines Azure, automatisation, déploiement, rapports BI et démos interactives."
 
 links:
   email: "kilian.c@gmx.fr"

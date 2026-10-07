@@ -48,6 +48,46 @@
     <p class="c4-agent" id="c4-agent"></p>
     <p class="c4-help" id="c4-help">Cliquez sur une colonne, ou utilisez les flèches gauche et droite puis Entrée.</p>
   </section>
+  {% elif project.demo.type == 'perudo' %}
+  <section class="demo pd" aria-labelledby="titre-demo"
+           data-model-url="{{ url(project.demo.model_url) if project.demo.model_url and project.demo.model_url.startswith('/') else project.demo.model_url }}"
+           data-model-version="{{ project.demo.model_version }}">
+    <h2 id="titre-demo" class="visually-hidden">Jouer une partie</h2>
+    <div class="c4-controls">
+      <label>Joueur du bas
+        <select id="pd-bottom"></select>
+      </label>
+      <label>Joueur du haut
+        <select id="pd-top"></select>
+      </label>
+      <button class="btn" id="pd-new" type="button">Nouvelle partie</button>
+    </div>
+    <div class="pd-table">
+      <div class="pd-seat">
+        <p class="pd-name" id="pd-name-1"></p>
+        <div class="pd-dice" id="pd-dice-1"></div>
+      </div>
+      <div class="pd-middle">
+        <p class="pd-bid" id="pd-bid" aria-live="polite">Aucun pari pour l'instant</p>
+        <ol class="pd-history" id="pd-history" aria-label="Derniers paris de la manche"></ol>
+      </div>
+      <div class="pd-seat">
+        <p class="pd-name" id="pd-name-0"></p>
+        <div class="pd-dice" id="pd-dice-0"></div>
+      </div>
+    </div>
+    <p class="c4-status" id="pd-status" aria-live="polite"></p>
+    <div class="pd-actions" id="pd-actions">
+      <label>Votre pari
+        <select id="pd-choice"></select>
+      </label>
+      <button class="btn btn-primary" id="pd-bet" type="button">Parier</button>
+      <button class="btn" id="pd-dudo" type="button">Dudo !</button>
+      <button class="btn btn-primary" id="pd-next" type="button" hidden>Manche suivante</button>
+    </div>
+    <p class="c4-agent" id="pd-agent"></p>
+    <p class="c4-help" id="pd-help"></p>
+  </section>
   {% elif project.demo.type == 'audio2video' %}
   <section class="demo a2v" aria-labelledby="titre-demo"
            data-space="{{ project.demo.space }}"
@@ -82,6 +122,8 @@
 {% block scripts %}
 {% if project.demo.type == 'connect4' %}
 <script type="module" src="{{ url('/js/puissance4/ui.js') }}"></script>
+{% elif project.demo.type == 'perudo' %}
+<script type="module" src="{{ url('/js/perudo/ui.js') }}"></script>
 {% elif project.demo.type == 'audio2video' %}
 <script type="module" src="{{ url('/js/gan-demo.js') }}"></script>
 {% endif %}

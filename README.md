@@ -14,6 +14,7 @@ content/projets/*.md        une page par projet (en-tête YAML + texte Markdown)
 templates/                  mise en page (Jinja2)
 static/                     CSS, JS, photo, CV, favicon (copiés tels quels)
 static/js/puissance4/       moteur de jeu, agents (minimax, Monte-Carlo, ONNX), interface
+static/js/perudo/           moteur de jeu, bots, réseau (ONNX), interface
 static/js/gan-demo.js       envoi de l'audio au Space Hugging Face
 deploy/gan-space/           modèle de Space Gradio pour servir le GAN
 tests/test_site.py          build + vérification des liens internes
@@ -28,10 +29,11 @@ build.py                    le générateur
 | Site statique, générateur Python maison | Quelques pages seulement : pas de framework à maintenir, un code lisible en dix minutes, des pages qui se chargent vite. |
 | Contenu en YAML et Markdown | Ajouter un projet revient à ajouter un fichier ; la mise en page reste séparée du texte. |
 | GitHub Pages + GitHub Actions | Hébergement gratuit, HTTPS inclus. Chaque push lance les tests puis publie ; un test en échec bloque la mise en ligne. |
-| Modèle du Puissance 4 exécuté dans le navigateur | Le réseau (environ 1 Mo, format ONNX) tourne chez le visiteur avec ONNX Runtime Web : aucun serveur, aucun coût, aucune latence réseau. |
+| Modèles du Puissance 4 et du Perudo exécutés dans le navigateur | Les réseaux (format ONNX, 1 Mo au plus) tournent chez le visiteur avec ONNX Runtime Web : aucun serveur, aucun coût, aucune latence réseau. |
 | Modèle du GAN servi par une API externe | Trop lourd pour un navigateur : la page appelle un Space Hugging Face. |
 | Un dépôt par projet | Le site ne contient aucun code d'entraînement. Chaque projet exporte un artefact (fichier de modèle ou API) que sa page référence. |
-| Repli automatique | Si le modèle ne se charge pas, la démo Puissance 4 retombe sur un adversaire minimax. |
+| Repli automatique | Si un modèle ne se charge pas, la démo retombe sur un adversaire programmé. |
+| Jeux et bots réécrits en JavaScript | Les démos n'appellent aucun serveur. Les bots du Perudo sont comparés à leur version Python sur des situations enregistrées. |
 
 Les tests construisent le site et vérifient que les pages existent, qu'aucun lien interne n'est cassé et que le fichier du modèle référencé est présent.
 
@@ -91,6 +93,8 @@ La démo propose l'IA entraînée, trois adversaires minimax et deux Monte-Carlo
    ```
 
 Si le modèle ne se charge pas, la page retombe automatiquement sur le minimax. Les tests vérifient que le fichier référencé existe.
+
+Le modèle du Perudo suit la même procédure : `python -m perudo.rl.export_onnx models/dqn/best.pt models/perudo.onnx` dans le dépôt [Perudo](https://github.com/KilianCO/Perudo), copie dans `static/models/perudo.onnx`, puis `model_url` et `model_version` dans `content/projets/perudo.md`.
 
 Pour des modèles plus lourds, une étape commentée dans `.github/workflows/deploy.yml` télécharge le fichier depuis une GitHub Release au lieu de le versionner ici.
 ## Brancher le GAN audio → vidéo

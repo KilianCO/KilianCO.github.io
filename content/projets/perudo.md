@@ -3,9 +3,14 @@ title: "Des bots qui bluffent au Perudo"
 short: "Bots Perudo"
 order: 3
 summary: "Un jeu de dés menteur en ligne de commande, des bots aux stratégies différentes et des tournois pour les départager."
-status: "Code disponible"
+status: "Démo jouable"
 stack: ["Python", "Probabilités", "Simulation", "PyTorch"]
 code: "https://github.com/KilianCO/perudo"
+demo:
+  type: perudo
+  # Fichier ONNX exporté depuis le dépôt du projet et servi par le site
+  model_url: ""
+  model_version: ""
 ---
 
 ## Le projet
@@ -23,4 +28,4 @@ Le moteur de jeu part du projet public [RuairiD/perudo](https://github.com/Ruair
 
 ## Et ensuite
 
-Une démo jouable dans le navigateur est prévue, sur le même principe que le Puissance 4 : affronter les bots directement sur cette page.
+Un réseau de neurones entraîné par renforcement rejoindra bientôt les bots de la démo, avec un classement de tous les joueurs.
