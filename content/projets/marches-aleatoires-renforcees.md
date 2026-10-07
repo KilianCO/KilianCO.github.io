@@ -1,5 +1,5 @@
 ---
-title: "Des fourmis, des phéromones et des marches aléatoires renforcées"
+title: "Marches aléatoires renforcées : modélisation de fourmis"
 short: "Marches renforcées"
 order: 4
 summary: "Un marcheur qui préfère les chemins déjà empruntés : les simulations d'un projet de recherche de Master 1, à rejouer et à modifier en Python dans le navigateur."
