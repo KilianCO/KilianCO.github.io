@@ -26,17 +26,16 @@
            data-model-version="{{ project.demo.model_version }}">
     <h2 id="titre-demo" class="visually-hidden">Jouer une partie</h2>
     <div class="c4-controls">
-      <label>Adversaire
-        <select id="c4-level">
-          <option value="1">Minimax facile</option>
-          <option value="4" selected>Minimax moyen</option>
-          <option value="6">Minimax difficile</option>
-        </select>
+      <label>Jaunes
+        <select id="c4-yellow"></select>
+      </label>
+      <label>Rouges
+        <select id="c4-red"></select>
       </label>
       <label>Premier joueur
         <select id="c4-first">
-          <option value="human" selected>Vous</option>
-          <option value="ai">L'IA</option>
+          <option value="1" selected>Jaunes</option>
+          <option value="2">Rouges</option>
         </select>
       </label>
       <button class="btn" id="c4-new" type="button">Nouvelle partie</button>
@@ -47,7 +46,7 @@
     </div>
     <p class="c4-status" id="c4-status" aria-live="polite">Vous jouez les jaunes. Choisissez une colonne.</p>
     <p class="c4-agent" id="c4-agent"></p>
-    <p class="c4-help">Cliquez sur une colonne, ou utilisez les flèches gauche et droite puis Entrée.</p>
+    <p class="c4-help" id="c4-help">Cliquez sur une colonne, ou utilisez les flèches gauche et droite puis Entrée.</p>
   </section>
   {% elif project.demo.type == 'audio2video' %}
   <section class="demo a2v" aria-labelledby="titre-demo"

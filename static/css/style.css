@@ -214,6 +214,7 @@ p { margin: 0 0 1em; }
 @keyframes drop-in { from { transform: translateY(-115%); } to { transform: translateY(0); } }
 .c4-scores { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; padding: 8px 10px 0; height: 46px; align-items: end; }
 .c4-scores span { display: block; margin: 0 18%; background: var(--disc-r); border-radius: 3px 3px 0 0; opacity: .75; transition: height .25s; }
+.c4-scores.is-y span { background: var(--disc-y); }
 .c4-status { font: 700 1.35rem var(--font-display); margin: 20px 0 6px; }
 .c4-agent, .c4-help { color: var(--muted); font-size: .95rem; margin-bottom: 4px; }
 

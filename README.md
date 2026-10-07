@@ -13,7 +13,7 @@ content/site.yaml           profil, parcours, expérience, stack, liens
 content/projets/*.md        une page par projet (en-tête YAML + texte Markdown)
 templates/                  mise en page (Jinja2)
 static/                     CSS, JS, photo, CV, favicon (copiés tels quels)
-static/js/puissance4/       moteur de jeu, agents (minimax, ONNX), interface
+static/js/puissance4/       moteur de jeu, agents (minimax, Monte-Carlo, ONNX), interface
 static/js/gan-demo.js       envoi de l'audio au Space Hugging Face
 deploy/gan-space/           modèle de Space Gradio pour servir le GAN
 tests/test_site.py          build + vérification des liens internes
@@ -76,7 +76,7 @@ La page `/projets/mon-projet/` et la carte sur l'accueil sont générées automa
 
 ## Mettre à jour le modèle Puissance 4
 
-La démo propose l'IA entraînée et trois adversaires minimax. Le modèle vient du dépôt [puissance-4](https://github.com/KilianCO/puissance-4), où il est entraîné, évalué puis exporté.
+La démo propose l'IA entraînée, trois adversaires minimax et deux Monte-Carlo ; on peut les affronter ou les regarder jouer entre eux. Le modèle vient du dépôt [puissance-4](https://github.com/KilianCO/puissance-4), où il est entraîné, évalué puis exporté.
 
 1. **Exporter** depuis le dépôt du projet : `python -m P4.rl.export_onnx models/dqn_v2/best.pt models/puissance4.onnx`. Le contrat est vérifié à l'export :
    - entrée `float32 [N, 2, 6, 7]` : plan 0 = pions du joueur qui doit jouer, plan 1 = pions adverses, ligne 0 en haut ;

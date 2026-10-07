@@ -2,7 +2,7 @@
 //   async choose(board, player) -> { col, scores: number[7] | null }
 // Pour brancher le modèle entraîné, il suffit de renseigner model_url dans
 // content/projets/puissance-4.md : l'OnnxAgent est alors utilisé.
-import { COLS, WINDOWS, other } from "./game.js";
+import { ROWS, COLS, WINDOWS, other } from "./game.js";
 
 const WIN = 1_000_000;
 const CENTER_FIRST = [3, 2, 4, 1, 5, 0, 6];
@@ -120,5 +120,95 @@ export class OnnxAgent {
     const sum = exp.reduce((a, b) => a + b, 0);
     const probs = exp.map((v, c) => (valid.includes(c) ? v / sum : null));
     return { col: masked.indexOf(max), scores: probs };
+  }
+}
+
+const UCT_EXPLORATION = 1.4;
+const DIRECTIONS = [[0, 1], [1, 0], [1, 1], [1, -1]];
+const ONGOING = 0, WON = 1, DRAWN = 2;
+
+/** Le pion posé en (row, col) complète-t-il un alignement de quatre ? */
+function wonAt(cells, row, col, player) {
+  for (const [dr, dc] of DIRECTIONS) {
+    let count = 1;
+    for (const sign of [1, -1]) {
+      for (let k = 1; k < 4; k++) {
+        const r = row + sign * dr * k, c = col + sign * dc * k;
+        if (r < 0 || r >= ROWS || c < 0 || c >= COLS || cells[r * COLS + c] !== player) break;
+        count++;
+      }
+    }
+    if (count >= 4) return true;
+  }
+  return false;
+}
+
+/**
+ * Recherche arborescente de Monte-Carlo pure : ni apprentissage, ni évaluation écrite à la main.
+ * Chaque coup est estimé en jouant des parties aléatoires à partir de lui.
+ * Même algorithme que P4/mcts.py dans le dépôt du projet.
+ */
+export class MonteCarloAgent {
+  constructor(simulations = 1000) {
+    this.simulations = simulations;
+  }
+  get label() {
+    return `recherche de Monte-Carlo, ${this.simulations.toLocaleString("fr-FR")} parties simulées par coup`;
+  }
+  async choose(board, player) {
+    const root = { parent: null, move: -1, children: [], untried: board.validMoves(), visits: 0, wins: 0, state: ONGOING };
+    for (let i = 0; i < this.simulations; i++) {
+      this.simulate(root, board.clone(), player);
+      if (i % 2500 === 2499) await new Promise((r) => setTimeout(r, 0)); // laisse respirer l'affichage
+    }
+    const scores = new Array(COLS).fill(null);
+    for (const child of root.children) scores[child.move] = child.visits / root.visits;
+    const best = Math.max(...root.children.map((c) => c.visits));
+    const ties = root.children.filter((c) => c.visits === best);
+    return { col: ties[Math.floor(Math.random() * ties.length)].move, scores };
+  }
+  simulate(root, b, player) {
+    let node = root, toMove = player;
+    // 1. Sélection : descendre dans l'arbre en suivant la formule UCT.
+    while (node.untried.length === 0 && node.children.length) {
+      const logVisits = Math.log(node.visits);
+      let best = null, bestValue = -Infinity;
+      for (const child of node.children) {
+        const value = child.wins / child.visits + UCT_EXPLORATION * Math.sqrt(logVisits / child.visits);
+        if (value > bestValue) { bestValue = value; best = child; }
+      }
+      b.play(best.move, toMove);
+      node = best; toMove = other(toMove);
+    }
+    // 2. Expansion : ajouter un coup pas encore essayé.
+    if (node.untried.length) {
+      const col = node.untried.splice(Math.floor(Math.random() * node.untried.length), 1)[0];
+      const row = b.play(col, toMove);
+      const state = wonAt(b.cells, row, col, toMove) ? WON : b.isFull() ? DRAWN : ONGOING;
+      const child = { parent: node, move: col, children: [], untried: state === ONGOING ? b.validMoves() : [], visits: 0, wins: 0, state };
+      node.children.push(child);
+      node = child; toMove = other(toMove);
+    }
+    // 3. Simulation : finir la partie au hasard. Résultat pour le joueur qui vient de jouer.
+    let result;
+    if (node.state === WON) result = 1;
+    else if (node.state === DRAWN) result = 0.5;
+    else {
+      const mover = other(toMove);
+      result = 0.5;
+      while (!b.isFull()) {
+        const moves = b.validMoves();
+        const col = moves[Math.floor(Math.random() * moves.length)];
+        const row = b.play(col, toMove);
+        if (wonAt(b.cells, row, col, toMove)) { result = toMove === mover ? 1 : 0; break; }
+        toMove = other(toMove);
+      }
+    }
+    // 4. Rétropropagation : le point de vue s'inverse à chaque étage.
+    while (node) {
+      node.visits++; node.wins += result;
+      result = 1 - result;
+      node = node.parent;
+    }
   }
 }
