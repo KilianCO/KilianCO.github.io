@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_visuals.html" import board, wave_to_frames, dice %}
+{% from "_visuals.html" import board, wave_to_frames, dice, walk %}
 {% block content %}
 <section class="hero wrap">
   <div class="hero-text">
@@ -69,12 +69,12 @@
 
 <section id="projets" class="section wrap" aria-labelledby="titre-projets">
   <h2 id="titre-projets" class="section-title">Projets</h2>
-  <p class="section-intro">Des modèles entraînés sur mon temps libre, déployés pour être testés ici même plutôt que décrits.</p>
+  <p class="section-intro">Des modèles et des simulations, déployés pour être testés ici même plutôt que décrits.</p>
   <div class="projects">
     {% for p in projects %}
     <article class="project {{ loop.cycle('', 'is-flipped') }}">
       <a class="project-visual" href="{{ url('/projets/' ~ p.slug ~ '/') }}" tabindex="-1" aria-hidden="true">
-        {% if p.demo.type == 'connect4' %}{{ board() }}{% elif p.demo.type == 'audio2video' %}{{ wave_to_frames() }}{% else %}{{ dice() }}{% endif %}
+        {% if p.demo.type == 'connect4' %}{{ board() }}{% elif p.demo.type == 'audio2video' %}{{ wave_to_frames() }}{% elif p.demo.type == 'marches' %}{{ walk() }}{% else %}{{ dice() }}{% endif %}
       </a>
       <div class="project-body">
         <p class="status {{ 'is-live' if p.status == 'Démo jouable' else '' }}">{{ p.status }}</p>
@@ -84,7 +84,7 @@
           {% for t in p.stack %}<li>{{ t }}</li>{% endfor %}
         </ul>
         <div class="actions">
-          <a class="btn btn-primary" href="{{ url('/projets/' ~ p.slug ~ '/') }}">{{ 'Jouer contre l\'IA' if p.demo.type in ('connect4', 'perudo') else 'Découvrir le projet' }}</a>
+          <a class="btn btn-primary" href="{{ url('/projets/' ~ p.slug ~ '/') }}">{{ 'Jouer contre l\'IA' if p.demo.type in ('connect4', 'perudo') else 'Lancer une simulation' if p.demo.type == 'marches' else 'Découvrir le projet' }}</a>
           {% if p.code %}<a class="btn" href="{{ p.code }}">Voir le code</a>{% endif %}
         </div>
       </div>

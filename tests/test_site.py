@@ -29,6 +29,18 @@ def test_pages_exist(site: Path):
     assert list((site / "projets").glob("*/index.html")), "aucune page projet générée"
 
 
+def test_python_module_is_published_with_the_demo(site: Path):
+    """La démo des marches exécute un module Python servi par le site."""
+    for page in site.rglob("*.html"):
+        if 'class="demo mar"' not in page.read_text(encoding="utf-8"):
+            continue
+
+        for fichier in ("__init__.py", "simulation.py", "experiences.py"):
+            assert (site / "py" / "marches" / fichier).exists(), fichier
+
+        assert (site / "js" / "marches" / "worker.js").exists()
+
+
 def test_internal_links_resolve(site: Path):
     import yaml
     base = yaml.safe_load((build.CONTENT / "site.yaml").read_text(encoding="utf-8")).get("base_path", "").rstrip("/")

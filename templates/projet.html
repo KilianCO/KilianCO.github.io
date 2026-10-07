@@ -88,6 +88,38 @@
     <p class="c4-agent" id="pd-agent"></p>
     <p class="c4-help" id="pd-help"></p>
   </section>
+  {% elif project.demo.type == 'marches' %}
+  <section class="demo mar" aria-labelledby="titre-demo"
+           data-worker="{{ url('/js/marches/worker.js') }}"
+           data-py-base="{{ url('/py/marches/') }}"
+           data-experience="{{ project.demo.experience }}">
+    <h2 id="titre-demo" class="visually-hidden">Lancer une simulation</h2>
+    <div class="c4-controls">
+      <label>Expérience du rapport
+        <select id="mar-experience"></select>
+      </label>
+      <button class="btn btn-primary" id="mar-lancer" type="button" disabled>Lancer</button>
+      <button class="btn" id="mar-rejouer" type="button">Rejouer l'animation</button>
+      <label class="mar-case"><input type="checkbox" id="mar-carte"> Carte des passages</label>
+    </div>
+    <p class="mar-description" id="mar-description"></p>
+    <div class="mar-reglages" id="mar-reglages"></div>
+    <div class="mar-scene">
+      <canvas id="mar-canvas" role="img" aria-label="Résultat de la simulation"></canvas>
+    </div>
+    <ul class="mar-legende" id="mar-legende"></ul>
+    <p class="c4-status" id="mar-statut" aria-live="polite"></p>
+    <p class="c4-agent" id="mar-mesures" aria-live="polite"></p>
+    <details class="mar-python">
+      <summary>Voir et modifier le code Python de cette expérience</summary>
+      <p class="c4-help">Ce code s'exécute dans votre navigateur. Modifiez-le librement : il suffit que la variable <code>sortie</code> contienne le résultat de <code>executer</code>, <code>simuler</code>, <code>simuler_1d</code> ou <code>balayer</code>.</p>
+      <textarea id="mar-code" spellcheck="false" rows="16" aria-label="Code Python de l'expérience"></textarea>
+      <div class="actions">
+        <button class="btn" id="mar-executer" type="button" disabled>Exécuter ce code</button>
+      </div>
+      <p class="mar-erreur" id="mar-erreur" aria-live="polite"></p>
+    </details>
+  </section>
   {% elif project.demo.type == 'audio2video' %}
   <section class="demo a2v" aria-labelledby="titre-demo"
            data-space="{{ project.demo.space }}"
@@ -114,7 +146,7 @@
 
   <nav class="next-project" aria-label="Autres projets">
     {% for p in projects if p.slug != project.slug %}
-    <a href="{{ url('/projets/' ~ p.slug ~ '/') }}">Projet suivant : {{ p.title }}</a>
+    <a href="{{ url('/projets/' ~ p.slug ~ '/') }}">Voir aussi : {{ p.title }}</a>
     {% endfor %}
   </nav>
 </article>
@@ -124,6 +156,8 @@
 <script type="module" src="{{ url('/js/puissance4/ui.js') }}"></script>
 {% elif project.demo.type == 'perudo' %}
 <script type="module" src="{{ url('/js/perudo/ui.js') }}"></script>
+{% elif project.demo.type == 'marches' %}
+<script type="module" src="{{ url('/js/marches/ui.js') }}"></script>
 {% elif project.demo.type == 'audio2video' %}
 <script type="module" src="{{ url('/js/gan-demo.js') }}"></script>
 {% endif %}

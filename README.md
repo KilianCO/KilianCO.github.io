@@ -15,6 +15,8 @@ templates/                  mise en page (Jinja2)
 static/                     CSS, JS, photo, CV, favicon (copiés tels quels)
 static/js/puissance4/       moteur de jeu, agents (minimax, Monte-Carlo, ONNX), interface
 static/js/perudo/           moteur de jeu, bots, réseau (ONNX), interface
+static/js/marches/          démo des marches aléatoires : interface et exécution de Python (Pyodide)
+static/py/marches/          module Python des marches, copié depuis son dépôt
 static/js/gan-demo.js       envoi de l'audio au Space Hugging Face
 deploy/gan-space/           modèle de Space Gradio pour servir le GAN
 tests/test_site.py          build + vérification des liens internes
@@ -33,6 +35,7 @@ build.py                    le générateur
 | Modèle du GAN servi par une API externe | Trop lourd pour un navigateur : la page appelle un Space Hugging Face. |
 | Un dépôt par projet | Le site ne contient aucun code d'entraînement. Chaque projet exporte un artefact (fichier de modèle ou API) que sa page référence. |
 | Repli automatique | Si un modèle ne se charge pas, la démo retombe sur un adversaire programmé. |
+| Python exécuté dans le navigateur pour les marches aléatoires | Le module Python du projet est servi tel quel et exécuté par Pyodide dans un Web Worker : une seule version du code, que le visiteur peut modifier. |
 | Jeux et bots réécrits en JavaScript | Les démos n'appellent aucun serveur. Les bots du Perudo sont comparés à leur version Python sur des situations enregistrées. |
 
 Les tests construisent le site et vérifient que les pages existent, qu'aucun lien interne n'est cassé et que le fichier du modèle référencé est présent.

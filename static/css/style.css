@@ -232,6 +232,29 @@ p { margin: 0 0 1em; }
 .pd-actions label { display: grid; gap: 4px; font-weight: 600; font-size: .95rem; }
 .pd-actions select { font: inherit; font-weight: 400; min-height: 46px; padding: 0 12px; border-radius: var(--radius-s); border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); }
 .pd-actions[hidden], .pd-actions [hidden] { display: none; }
+.walk { width: 100%; max-width: 360px; margin-inline: auto; display: block; }
+.walk polyline { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.walk .walk-0 { stroke: var(--disc-r); }
+.walk .walk-1 { stroke: var(--disc-y); }
+.walk .walk-2 { stroke: #2F6FED; }
+.walk .walk-start { fill: var(--ink); stroke: var(--surface); stroke-width: 2.5; }
+
+.mar [hidden] { display: none; }
+.mar-description { color: var(--ink-soft); max-width: 68ch; margin: -8px 0 20px; }
+.mar-reglages { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px 20px; margin-bottom: 24px; }
+.mar-reglages label { display: grid; gap: 4px; font-weight: 600; font-size: .92rem; }
+.mar-reglages input[type="number"], .mar-reglages select { font: inherit; font-weight: 400; min-height: 42px; padding: 0 10px; border-radius: var(--radius-s); border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); width: 100%; }
+.mar .mar-case { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: .92rem; min-height: 42px; }
+.mar-case input { width: 18px; height: 18px; accent-color: var(--disc-y); }
+.mar-scene { max-width: 640px; background: var(--paper); border-radius: var(--radius-l); overflow: hidden; }
+.mar-scene canvas { display: block; }
+.mar-legende { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: .92rem; }
+.mar-legende li { display: flex; align-items: center; gap: 8px; }
+.mar-pastille { width: 34px; height: 10px; border-radius: 999px; display: inline-block; }
+.mar-python { margin-top: 20px; border-top: 1px solid var(--line); padding-top: 16px; }
+.mar-python summary { cursor: pointer; font-weight: 600; }
+.mar-python textarea { width: 100%; margin: 12px 0; padding: 14px; font: .9rem/1.5 ui-monospace, "Cascadia Code", Consolas, monospace; border-radius: var(--radius-s); border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); resize: vertical; tab-size: 4; }
+.mar-erreur { color: var(--disc-r); font-family: ui-monospace, Consolas, monospace; font-size: .9rem; min-height: 1.4em; }
 .c4-status { font: 700 1.35rem var(--font-display); margin: 20px 0 6px; }
 .c4-agent, .c4-help { color: var(--muted); font-size: .95rem; margin-bottom: 4px; }
 
@@ -273,3 +296,5 @@ p { margin: 0 0 1em; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+.next-project a { display: block; margin-bottom: 8px; }
