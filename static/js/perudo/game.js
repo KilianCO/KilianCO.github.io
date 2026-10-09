@@ -17,30 +17,30 @@ export const indexAction = (index) =>
 export const sameBid = (a, b) => a !== DUDO && b !== DUDO && a.quantity === b.quantity && a.value === b.value;
 
 /**
- * Le pari est-il permis après `last` ? `used` contient les numéros des paris
- * déjà annoncés dans la manche : un pari ne peut pas être répété.
+ * Le pari est-il permis après `last` ? Règles du Perudo classique : la quantité
+ * ne baisse jamais, sauf en passant aux as. Chaque pari est plus haut que le
+ * précédent, donc une manche se termine toujours.
  */
-export function isValidBid(bid, last, totalDice, used = new Set()) {
+export function isValidBid(bid, last, totalDice) {
   if (bid.value < 1 || bid.value > FACES) return false;
   if (bid.quantity < 1 || bid.quantity > totalDice) return false;
-  if (used.has(actionIndex(bid))) return false;
   if (!last) return true;
+  if (bid.value === ACE && last.value === ACE) return bid.quantity > last.quantity;
+  // Passer aux as : au moins la moitié, arrondie au supérieur.
+  if (bid.value === ACE) return 2 * bid.quantity >= last.quantity;
   // Quitter les as : au moins le double plus un.
-  if (last.value === ACE && bid.value > ACE && bid.quantity < 2 * last.quantity + 1) return false;
-  // Sans monter la quantité, il faut monter la valeur (ou passer aux as).
-  if (bid.quantity <= last.quantity && (bid.value === last.value || (bid.value > ACE && bid.value <= last.value))) return false;
-  // Passer aux as : au moins la moitié.
-  if (bid.value === ACE && last.value > ACE && 2 * bid.quantity < last.quantity) return false;
-  return true;
+  if (last.value === ACE) return bid.quantity >= 2 * last.quantity + 1;
+  // Sinon : monter la quantité, ou garder la quantité et monter la valeur.
+  return bid.quantity > last.quantity || (bid.quantity === last.quantity && bid.value > last.value);
 }
 
 /** Tous les paris permis, par quantité puis valeur croissantes. */
-export function legalBids(last, totalDice, used = new Set()) {
+export function legalBids(last, totalDice) {
   const bids = [];
   for (let quantity = 1; quantity <= totalDice; quantity++)
     for (let value = 1; value <= FACES; value++) {
       const bid = { quantity, value };
-      if (isValidBid(bid, last, totalDice, used)) bids.push(bid);
+      if (isValidBid(bid, last, totalDice)) bids.push(bid);
     }
   return bids;
 }
@@ -86,7 +86,6 @@ export class Game {
     this.lastBid = null;
     this.lastBidder = null;
     this.history = [];
-    this.used = new Set();
   }
 
   /** Dés de la table qui comptent pour la valeur. */
@@ -96,7 +95,7 @@ export class Game {
 
   legalActions() {
     if (this.isOver) return [];
-    const bids = legalBids(this.lastBid, this.totalDice, this.used);
+    const bids = legalBids(this.lastBid, this.totalDice);
     return this.lastBid ? [DUDO, ...bids] : bids;
   }
 
@@ -109,11 +108,10 @@ export class Game {
       if (!this.lastBid) throw new Error("Dudo impossible : aucun pari à mettre en doute.");
       return this.resolveDudo();
     }
-    if (!isValidBid(action, this.lastBid, this.totalDice, this.used)) {
+    if (!isValidBid(action, this.lastBid, this.totalDice)) {
       throw new Error(`Pari interdit : ${action.quantity} × ${action.value}`);
     }
     this.history.push({ player: this.current, bid: action });
-    this.used.add(actionIndex(action));
     this.lastBid = action;
     this.lastBidder = this.current;
     this.current = 1 - this.current;

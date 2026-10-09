@@ -10,12 +10,14 @@ demo:
   type: perudo
   # Fichier ONNX exporté depuis le dépôt du projet et servi par le site
   model_url: "/models/perudo.onnx"
-  model_version: "v1"
+  model_version: "v2"
 ---
 
 ## Le jeu
 
 Chaque joueur lance ses dés en secret. À tour de rôle, on annonce un pari sur l'ensemble des dés de la table, par exemple « au moins trois dés de valeur 4 », ou on met en doute le pari précédent en disant *dudo*. Les dés sont alors révélés, et celui qui s'est trompé perd un dé. Les as comptent pour toutes les valeurs. Le dernier joueur à qui il reste des dés gagne.
+
+Un pari doit toujours être plus haut que le précédent : on monte la quantité, avec la valeur de son choix, ou on garde la quantité et on monte la valeur. La quantité ne baisse jamais, sauf en passant aux as, où la moitié suffit ; pour quitter les as, il faut le double plus un.
 
 La démo se joue en duel, cinq dés chacun. Choisissez « Vous » pour le joueur du bas et affrontez un bot ; ou mettez un bot de chaque côté et regardez la partie, dés visibles.
 
@@ -35,21 +37,27 @@ Tous les joueurs se sont affrontés deux à deux, 2 000 duels par confrontation,
 
 | Rang | Joueur | Méthode | Elo |
 |---|---|---|---|
-| 1 | Probabiliste audacieux | calcul exact | 1836 |
-| 2 | Probabiliste discret | calcul exact | 1833 |
-| 3 | **Réseau de neurones** | apprentissage | 1804 |
-| 4 | Prudent | règle simple | 1657 |
-| 5 | Statistique | règle simple | 1390 |
-| 6 | Observateur | règle simple | 1378 |
-| 7 | Aléatoire | hasard | 603 |
+| 1 | Probabiliste audacieux | calcul exact | 1797 |
+| 2 | **Réseau de neurones** | apprentissage | 1781 |
+| 3 | Probabiliste discret | calcul exact | 1771 |
+| 4 | Prudent | règle simple | 1721 |
+| 5 | Observateur | règle simple | 1440 |
+| 6 | Statistique | règle simple | 1382 |
+| 7 | Aléatoire | hasard | 609 |
+
+Les trois premiers se tiennent en 26 points : ils sont pratiquement à égalité.
 
 ## Ce que le classement ne dit pas
 
-En confrontation directe, le réseau **bat les deux bots probabilistes** : 60 % de victoires contre l'audacieux, 56 % contre le discret. Il a appris à tirer parti d'adversaires qui ne bluffent jamais.
+**Le réseau bat le bot qui le devance.** En confrontation directe, il gagne 54 % de ses duels contre le probabiliste audacieux, et fait jeu égal avec le discret.
 
-S'il n'est que troisième, c'est qu'il perd encore un quart de ses duels contre les bots les plus faibles (24 % contre l'Observateur, 29 % contre le Statistique), que les probabilistes écrasent à plus de 96 %. Il les a très peu rencontrés pendant son entraînement, et leurs paris inhabituels le déroutent : un modèle appris est bon là où il s'est entraîné.
+**Il est le seul à dominer le Prudent** : 81 % de victoires, là où les deux probabilistes plafonnent à 57 % et 51 %. Le Prudent surenchérit obstinément sans presque jamais douter. Un calcul de probabilités qui n'écoute pas l'adversaire n'en tire rien ; le réseau, qui voit les paris adverses, a appris à le piéger.
 
-Autre résultat : aucun style n'est le meilleur dans l'absolu. Le probabiliste discret bat l'audacieux (57 %), alors que l'audacieux fait mieux contre presque tous les autres.
+**Sa faiblesse reste les adversaires qu'il a peu rencontrés.** Il ne gagne que 65 % de ses duels contre l'Observateur, que le probabiliste audacieux bat à 90 %. Ce bot ne représentait que 3 % de ses parties d'entraînement : un modèle appris est bon là où il s'est entraîné.
+
+## Quand les règles changent le classement
+
+Une première version du projet suivait une variante où l'on pouvait baisser la quantité d'un pari en montant sa valeur. Elle offrait presque toujours une échappatoire sans risque, et permettait même des manches sans fin. Le passage aux règles classiques a tout rebattu : le Prudent, que le calcul exact battait 84 fois sur 100, lui tient désormais tête. Une stratégie n'est bonne que pour un jeu donné.
 
 ## Comment la démo fonctionne
 
@@ -59,4 +67,4 @@ Le moteur du jeu et les bots sont réécrits en JavaScript ; le réseau est expo
 
 Le réseau joue toujours le même coup dans la même situation : un adversaire attentif peut l'exploiter, ce qui est une vraie faiblesse dans un jeu de bluff. La méthode de référence pour ces jeux, la minimisation du regret (CFR), celle des IA de poker, apprend au contraire à mélanger ses coups : c'est la suite envisagée, avec un entraînement face à des adversaires plus variés.
 
-Les règles suivent une variante où un pari peut baisser la quantité s'il monte la valeur ; les résultats ne se transposent pas tels quels au Perudo classique.
+Son entraînement a été arrêté à 40 000 duels alors qu'il progressait encore.
